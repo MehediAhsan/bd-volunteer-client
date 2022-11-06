@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 
 const EventDetails = () => {
     const event = useLoaderData();
-    const {title, img, description} = event;
+    const {_id, title, img, description} = event;
     return (
         <div>
            <div className='flex flex-col gap-10'>
@@ -11,7 +11,9 @@ const EventDetails = () => {
             <img src={img} alt="" />
             <p>{description}</p>
            </div>
-           <button className='bg-blue-700 hover:bg-blue-800 text-white p-2 px-4 rounded max-w-xs my-10'>Donate Now</button> 
+           <Link to={`/donate/${_id}`}>
+                <button className='bg-blue-700 hover:bg-blue-800 text-white p-2 px-4 rounded max-w-xs my-10'>Donate</button>
+           </Link> 
         </div>
     );
 };
