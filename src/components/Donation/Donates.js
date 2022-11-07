@@ -42,7 +42,28 @@ const Donates = () => {
           }) 
     }
 
-    
+    const handleStatusUpdate = id => {
+        fetch(`http://localhost:5000/donates/${id}`, {
+            method: 'PATCH', 
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({status: 'Approved'})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.modifiedCount > 0) {
+                const remaining = donates.filter(odr => odr._id !== id);
+                const approving = donates.find(odr => odr._id === id);
+                approving.status = 'Approved'
+
+                const newDonates = [approving, ...remaining];
+                setDonates(newDonates);
+            }
+        })
+    }
+
+
 
     return (
         <div className="container p-2 mx-auto sm:p-4 dark:text-gray-100">
@@ -65,6 +86,7 @@ const Donates = () => {
                     key={donate._id}
                     donate={donate}
                     handleDelete={handleDelete}
+                    handleStatusUpdate={handleStatusUpdate}
                     ></DonateRow>)
                 }
 			</tbody>

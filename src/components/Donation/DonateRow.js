@@ -1,7 +1,7 @@
 import React from 'react';
 
-const DonateRow = ({donate, handleDelete}) => {
-    const {_id, eventName, donar, phone, email} = donate;
+const DonateRow = ({donate, handleDelete, handleStatusUpdate}) => {
+    const {_id, eventName, donar, phone, email, status} = donate;
     return (
         <tr className="border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900">
             <td className="p-3">
@@ -19,7 +19,9 @@ const DonateRow = ({donate, handleDelete}) => {
             </td>
             <td className="p-3">
                 <span className="px-3 py-1 font-semibold rounded-md dark:bg-violet-400 dark:text-gray-900">
-                    <span>Pending</span>
+                    <button 
+                    onClick={() => handleStatusUpdate(_id)}
+                    className="btn btn-ghost btn-xs">{status ? status : 'pending'}</button>
                 </span>
             </td>
         </tr>
