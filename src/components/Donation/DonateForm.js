@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { json, useLoaderData } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider';
 
 const DonateForm = () => {
@@ -13,7 +13,34 @@ const DonateForm = () => {
         const email = user?.email;
         const phone = form.phone.value;
         const message = form.message.value;
-        console.log(name,email,phone,message,title);
+        // console.log(name,email,phone,message,title);
+
+        const donate = {
+            event: _id,
+            eventName: title,
+            donar: name,
+            email,
+            phone,
+            message
+        }
+
+        console.log(donate);
+
+        fetch('http://localhost:5000/donates', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(donate)
+        })
+        .then( res => res.json())
+        .then( data => {
+            if(data.acknowledged){
+                alert('Donate confirm successfully')
+                form.reset();
+            }
+        })
+        .catch( error => console.error(error))
     }
 
     return (

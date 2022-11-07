@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import DonateForm from "../components/Donation/DonateForm";
+import Donates from "../components/Donation/Donates";
 import EventDetails from "../components/Home/EventDetails";
 import Home from "../components/Home/Home";
 import Login from "../components/Login/Login/Login";
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
                 path: '/donate/:id',
                 element: <DonateForm></DonateForm>,
                 loader: ({params}) => fetch(`http://localhost:5000/event/${params.id}`)
+            },
+            {
+                path: '/donates',
+                element: <Donates></Donates>
             },
             {
                 path: '/login',
