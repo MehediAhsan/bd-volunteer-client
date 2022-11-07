@@ -6,6 +6,7 @@ import Home from "../components/Home/Home";
 import Login from "../components/Login/Login/Login";
 import Register from "../components/Login/Register/Register";
 import Main from "../layout/Main";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
 export const router = createBrowserRouter([
     {
@@ -28,7 +29,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/donates',
-                element: <Donates></Donates>
+                element: <PrivateRoute><Donates></Donates></PrivateRoute>
             },
             {
                 path: '/login',

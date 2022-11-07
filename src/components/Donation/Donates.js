@@ -1,18 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../contexts/AuthProvider';
 import DonateRow from './DonateRow';
 
 const Donates = () => {
+    const {user, logOut} = useContext(AuthContext);
     const [donates, setDonates] = useState([]);
 
-    useEffect(() => {
-        fetch('http://localhost:5000/donates')
-        .then(res => res.json())
-        .then(data => setDonates(data))
-    }, [])
+    useEffect( () => {
+        fetch(`http://localhost:5000/donates?email=${user?.email}`, {
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('genius-token')}`
+            }
+        })
+        .then( res => {
+            if(res.status === 401 || res.status === 403){
+                return logOut();
+            }
+            return res.json()
+        })
+        .then( data => setDonates(data))
+    }, [user?.email, logOut])
 
 
-    const handleDelete = id => {
+
+    function handleDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -21,25 +33,25 @@ const Donates = () => {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
                 fetch(`http://localhost:5000/donates/${id}`, {
                     method: 'DELETE',
                 })
-                .then(res => res.json())
-                .then(data =>{
-                    if(data.deletedCount > 0){
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                          )
-                        const remaining = donates.filter(dnt => dnt._id !== id);
-                        setDonates(remaining);
-                    }
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.deletedCount > 0) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            );
+                            const remaining = donates.filter(dnt => dnt._id !== id);
+                            setDonates(remaining);
+                        }
+                    });
             }
-          }) 
+        });
     }
 
     const handleStatusUpdate = id => {
